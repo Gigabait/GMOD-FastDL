@@ -105,7 +105,7 @@ namespace FastDL
                 {
                     try
                     {
-                        BZip2.Compress(fileToBeZippedAsStream, zipTargetAsStream, true, 4096);
+                        BZip2.Compress(fileToBeZippedAsStream, zipTargetAsStream, true, 9);
                     }
                     catch (Exception ex)
                     {

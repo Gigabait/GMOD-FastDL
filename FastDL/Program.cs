@@ -73,7 +73,12 @@ namespace FastDL
 
             StreamWriter rf = new StreamWriter(target + @"\resource.lua");
             FileManager fm = new FileManager(path);
-            int copied = 0;
+            FileInfo fi;
+            int total      = 0;
+            int useless    = 0;
+            long ignorelen = 0;
+            long beforelen = 0;
+            long afterlen  = 0;
 
             foreach (File file in fm.Files)
             {
@@ -91,23 +96,45 @@ namespace FastDL
 
                 string fullpath = file.GetFullPath();
                 relitivepath = fullpath.Replace(relitivepath.Substring(1), "");
-        
                 string nicepath = relitivepath.Substring(1).Replace(@"\", "/");
+
+                if ((fullpath.Substring(fullpath.Length - 9) == ".xbox.vtx") || (fullpath.Substring(fullpath.Length - 7) == ".sw.vtx"))
+                {
+                    Console.WriteLine("Ignored -> " + nicepath);
+                    fi = new FileInfo(fullpath);
+                    ignorelen += fi.Length;
+                    useless++;
+                    continue;
+                }
 
                 if (file.Ext != ".bsp")
                     rf.WriteLine("resource.AddSingleFile'" + nicepath + "'");
-
+                
                 fm.Copy(target + relitivepath, fullpath);
+
+                fi = new FileInfo(target + relitivepath);
+                beforelen += fi.Length;
+
+                Console.WriteLine("Copied -> " + nicepath);
+
                 fm.Compress(target + relitivepath);
 
-                Console.WriteLine("Compressed -> " + nicepath);
+                fi = new FileInfo(target + relitivepath + ".bz2");
+                afterlen += fi.Length;
 
-                copied++;
+                Console.WriteLine("Compressed -> " + nicepath + ".bz2");
+
+                total++;
             }
 
             rf.Close();
 
-            Console.WriteLine("\nComplete!\n   Files Compressed: " + copied);
+            Console.WriteLine("\n\nComplete:");
+            Console.WriteLine("   Files Compressed: " + total);
+            Console.WriteLine("   Files Ignored: " + useless);
+            Console.WriteLine("   Uncompressed Size: " + beforelen/1024/1024 + "mb");
+            Console.WriteLine("   Compressed Size: " + afterlen/1024/1024 + "mb");
+            Console.WriteLine("   Total Saved: " + ((ignorelen + beforelen) - afterlen)/1024/1024 + "mb");
             Console.ReadLine();
         }
     }
