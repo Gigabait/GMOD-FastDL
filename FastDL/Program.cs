@@ -38,7 +38,9 @@ namespace FastDL
                 case "maps":
                 case "materials":
                 case "models":
+                case "particles":
                 case "resource":
+                case "sound":
                     return true;
             }
 
