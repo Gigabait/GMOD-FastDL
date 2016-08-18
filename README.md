@@ -1,6 +1,4 @@
 # GMOD-FastDL
-A small C# program that sorts and compresses the addon folder for fastDL for GMOD
+A small C# program that sorts and compresses files for FastDL
 
-
-Compile the program and place it in your addons folder and run.
-Once its finished copy the content from inside the FastDL folder (created in the Addons folder) to your fastDL root.
+Drag your whole addons folder or even a single folder of content onto the compiled exe and it will place the compressed files at yourfoldername_out

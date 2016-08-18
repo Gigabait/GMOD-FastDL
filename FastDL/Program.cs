@@ -5,7 +5,7 @@ namespace FastDL
 {
     class Program
     {
-        static public bool IsValidFile(string ext)
+        static bool IsValidFile(string ext)
         {
             if (string.IsNullOrEmpty(ext))
                 return false;
@@ -31,6 +31,20 @@ namespace FastDL
             return false;
         }
 
+        static bool IsValidDir(string dir)
+        {
+            switch (dir.ToLower())
+            {
+                case "maps":
+                case "materials":
+                case "models":
+                case "resource":
+                    return true;
+            }
+
+            return false;
+        }
+
         static void Main(string[] args)
         {
             if (args.Length != 1)
@@ -40,15 +54,15 @@ namespace FastDL
                 return;
             }
 
-            if (Directory.Exists(args[0]))
+            string path = args[0].Replace("\"", "");
+            if (!Directory.Exists(path))
             {
-                Console.WriteLine("Invalid Directory: " + args[0]);
+                Console.WriteLine("Invalid Directory: " + path);
                 Console.ReadLine();
                 return;
             }
 
-            string path = args[0].Replace("\"", "");
-            string target = Directory.GetCurrentDirectory() + @"\FastDL";
+            string target = Directory.GetCurrentDirectory() + @"\" + (new DirectoryInfo(path).Name) + "_out";
 
             if (Directory.Exists(target))
                 Directory.Delete(target, true);
@@ -64,17 +78,13 @@ namespace FastDL
                 if (!IsValidFile(file.Ext))
                     continue;
 
-                bool breaknext = false;
                 string relitivepath = "";
                 foreach (string folder in file.Path)
                 {
-                    relitivepath = relitivepath + @"\" + folder;
-
-                    if (breaknext)
+                    if (IsValidDir(folder))
                         break;
 
-                    if (relitivepath.Substring(1) == path)
-                        breaknext = true;
+                    relitivepath = relitivepath + @"\" + folder;
                 }
 
                 string fullpath = file.GetFullPath();
@@ -82,11 +92,13 @@ namespace FastDL
         
                 string nicepath = relitivepath.Substring(1).Replace(@"\", "/");
 
-                rf.WriteLine("resource.AddSingleFile'" + nicepath + "'");
+                if (file.Ext != ".bsp")
+                    rf.WriteLine("resource.AddSingleFile'" + nicepath + "'");
+
                 fm.Copy(target + relitivepath, fullpath);
                 fm.Compress(target + relitivepath);
 
-                Console.WriteLine("Added -> " + nicepath);
+                Console.WriteLine("Compressed -> " + nicepath);
 
                 copied++;
             }
