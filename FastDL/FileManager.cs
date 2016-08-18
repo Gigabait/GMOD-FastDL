@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FastDL
 {
@@ -21,8 +18,6 @@ namespace FastDL
 
             Name = System.IO.Path.GetFileNameWithoutExtension(fullpath);
             Ext = System.IO.Path.GetExtension(fullpath);
-
-            //Console.Out.WriteLine(GetFullPath());
         }
 
         public string GetFullPath()
@@ -111,7 +106,6 @@ namespace FastDL
                     try
                     {
                         BZip2.Compress(fileToBeZippedAsStream, zipTargetAsStream, true, 4096);
-                        Console.Out.WriteLine("Compressed: " + zipFileName.FullName);
                     }
                     catch (Exception ex)
                     {
