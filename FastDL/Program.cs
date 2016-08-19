@@ -69,9 +69,9 @@ namespace FastDL
             if (Directory.Exists(target))
                 Directory.Delete(target, true);
 
-            Directory.CreateDirectory(target);
+            Directory.CreateDirectory(target + @"\lua\autorun\server\");
 
-            StreamWriter rf = new StreamWriter(target + @"\resource.lua");
+            StreamWriter rf = new StreamWriter(target + @"\lua\autorun\server\resource_" + Math.Floor((DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds) + ".lua");
             FileManager fm = new FileManager(path);
             FileInfo fi;
             int total      = 0;
@@ -100,9 +100,11 @@ namespace FastDL
 
                 if ((fullpath.Substring(fullpath.Length - 9) == ".xbox.vtx") || (fullpath.Substring(fullpath.Length - 7) == ".sw.vtx"))
                 {
-                    Console.WriteLine("Ignored -> " + nicepath);
+                    Console.WriteLine("Removed -> " + nicepath);
                     fi = new FileInfo(fullpath);
                     ignorelen += fi.Length;
+
+                    System.IO.File.Delete(fullpath);
                     useless++;
                     continue;
                 }
@@ -131,7 +133,7 @@ namespace FastDL
 
             Console.WriteLine("\n\nComplete:");
             Console.WriteLine("   Files Compressed: " + total);
-            Console.WriteLine("   Files Ignored: " + useless);
+            Console.WriteLine("   Files Removed: " + useless);
             Console.WriteLine("   Uncompressed Size: " + beforelen/1024/1024 + "mb");
             Console.WriteLine("   Compressed Size: " + afterlen/1024/1024 + "mb");
             Console.WriteLine("   Total Saved: " + ((ignorelen + beforelen) - afterlen)/1024/1024 + "mb");
