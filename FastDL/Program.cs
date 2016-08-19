@@ -100,11 +100,9 @@ namespace FastDL
 
                 if ((fullpath.Substring(fullpath.Length - 9) == ".xbox.vtx") || (fullpath.Substring(fullpath.Length - 7) == ".sw.vtx"))
                 {
-                    Console.WriteLine("Removed -> " + nicepath);
+                    Console.WriteLine("Ignored -> " + nicepath);
                     fi = new FileInfo(fullpath);
                     ignorelen += fi.Length;
-
-                    System.IO.File.Delete(fullpath);
                     useless++;
                     continue;
                 }
@@ -133,7 +131,7 @@ namespace FastDL
 
             Console.WriteLine("\n\nComplete:");
             Console.WriteLine("   Files Compressed: " + total);
-            Console.WriteLine("   Files Removed: " + useless);
+            Console.WriteLine("   Files Ignored: " + useless);
             Console.WriteLine("   Uncompressed Size: " + beforelen/1024/1024 + "mb");
             Console.WriteLine("   Compressed Size: " + afterlen/1024/1024 + "mb");
             Console.WriteLine("   Total Saved: " + ((ignorelen + beforelen) - afterlen)/1024/1024 + "mb");
